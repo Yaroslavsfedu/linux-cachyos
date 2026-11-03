@@ -170,7 +170,7 @@ pkgdesc='Linux EEVDF scheduler + Cachy Sauce Kernel by CachyOS with other patche
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
-url="https://github.com/CachyOS/linux-cachyos"
+url="https://github.com/Yaroslavsfedu/linux-cachyos"
 license=('GPL-2.0-only')
 options=('!strip' '!debug' '!lto')
 makedepends=(
@@ -202,7 +202,9 @@ _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 _nv_580xx_ver=580.196.07
 _nv_580xx_pkg="NVIDIA-Linux-x86_64-${_nv_580xx_ver}"
 source=(
-    "https://github.com/CachyOS/linux/releases/download/${_srcname}/${_srcname}.tar.gz"{,.asc}
+    # Исходники ядра качаются из релиза ЭТОГО форка (личный mirror tarball'а CachyOS/linux).
+    # Чтобы релиз появился/обновился, запустите в корне форка: ./mirror-release.sh cachyos-7.3.1-1
+    "https://github.com/Yaroslavsfedu/linux-cachyos/releases/download/${_srcname}/${_srcname}.tar.gz"{,.asc}
     "config"
 )
 validpgpkeys=(
@@ -575,6 +577,10 @@ _package() {
 
     # Used by mkinitcpio to name the kernel
     echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+
+    # Кладём итоговый .config внутрь пакета: он обязан попадать в пакет
+    # (проверка оптимизации в CI, воспроизведение конфига пользователями)
+    install -Dm644 .config "$modulesdir/config"
 
     echo "Installing modules..."
     ZSTD_CLEVEL=19 make "${BUILD_FLAGS[@]}" INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
