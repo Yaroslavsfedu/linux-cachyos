@@ -343,13 +343,14 @@ prepare() {
         MARCH="${_processor_opt^^}"
 
         case "$MARCH" in
-            GENERIC_V[1-4]) scripts/config -e GENERIC_CPU -d MZEN4 -d X86_NATIVE_CPU \
+            GENERIC_V[1-4]) scripts/config -e GENERIC_CPU -d MZEN4 -d MZEN5 -d X86_NATIVE_CPU \
                 --set-val X86_64_VERSION "${MARCH//GENERIC_V}";;
-            ZEN4) scripts/config -d GENERIC_CPU -e MZEN4 -d X86_NATIVE_CPU;;
-            NATIVE) scripts/config -d GENERIC_CPU -d MZEN4 -e X86_NATIVE_CPU;;
+            ZEN4) scripts/config -d GENERIC_CPU -d MZEN5 -e MZEN4 -d X86_NATIVE_CPU;;
+            ZEN5) scripts/config -d GENERIC_CPU -d MZEN4 -e MZEN5 -d X86_NATIVE_CPU;;
+            NATIVE) scripts/config -d GENERIC_CPU -d MZEN4 -d MZEN5 -e X86_NATIVE_CPU;;
         esac
     else
-        scripts/config -d GENERIC_CPU -d MZEN4 -e X86_NATIVE_CPU
+        scripts/config -d GENERIC_CPU -d MZEN4 -d MZEN5 -e X86_NATIVE_CPU
     fi
 
     ### Selecting CachyOS config
